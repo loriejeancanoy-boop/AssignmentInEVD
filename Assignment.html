@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+      <title>Send Feedback</title>
+    </head>
+    <body>
+      <h2>Feedback Form</h2>
+      <input type="email" id="email" placeholder="Your Email" required style="width:300px; padding:5px;" /><br><br>
+      <textarea id="message" placeholder="Your Message" rows="4" cols="40" required style="padding:5px;"></textarea><br><br>
+      <button id="sendFeedbackBtn">Send Feedback</button>
+
+      <script>
+        const scriptURL = "https://script.google.com/macros/s/AKfycbxI7iEjvYUh5TWSOk-yxZf4QGii1jg45Yv2zSc3TJGZEO6Ji-xI6wKThEV9Tk9KhUt3/exec"
+
+        document.getElementById("sendFeedbackBtn").addEventListener("click", () => {
+          const email = document.getElementById("email").value.trim();
+          const message = document.getElementById("message").value.trim();
+
+          if (!email || !message) {
+            alert("Please fill in both email and message.");
+            return;
+          }
+
+          const feedback = { email, message };
+
+          fetch(scriptURL, {
+            method: "POST",
+            body: JSON.stringify(feedback),
+            headers: {
+              "Content-Type": "application/json"
+            }
+          })
+          .then(response => response.text())
+          .then(text => {
+            alert(text);
+            // Clear form after success
+            document.getElementById("email").value = "";
+            document.getElementById("message").value = "";
+          })
+          .catch(error => {
+            console.error("Error:", error);
+            alert("An error occurred. See console for details.");
+          });
+        });
+      </script>
+    </body>
+    </html>
